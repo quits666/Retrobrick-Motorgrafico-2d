@@ -1,0 +1,186 @@
+{
+  "speed_increment": 10, 
+  "levels": {}, 
+  "grid": [
+    20, 
+    20
+  ], 
+  "invulnerability_time": 0, 
+  "initial_speed": 180, 
+  "shapes": {
+    "BASIC_ENEMY": {
+      "color": "#FF0000", 
+      "speed": 1, 
+      "hp": 1, 
+      "states": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "ENEMY"
+    }, 
+    "BULLET": {
+      "color": "#FFFF00", 
+      "speed": 1, 
+      "hp": 1, 
+      "states": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "BULLET"
+    }, 
+    "PLAYER_TANK": {
+      "color": "#00FF00", 
+      "speed": 1, 
+      "hp": 3, 
+      "states": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "PLAYER"
+    }, 
+    "REPAIR_HAMMER": {
+      "color": "#00FFFF", 
+      "speed": 1, 
+      "hp": 1, 
+      "states": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 1, 
+      "type": "POWERUP"
+    }, 
+    "MEGA_FORTRESS": {
+      "color": "#FF00FF", 
+      "speed": 1, 
+      "hp": 15, 
+      "states": [
+        [
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            1, 
+            0, 
+            1
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "BOSS"
+    }, 
+    "ARMORED_ENEMY": {
+      "color": "#FFA500", 
+      "speed": 1, 
+      "hp": 2, 
+      "states": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "ENEMY"
+    }
+  }, 
+  "game_type": "TANKS", 
+  "shape_type": "RECTANGLE", 
+  "has_poison": false, 
+  "difficulty_mode": "BABY", 
+  "has_obstacles": false, 
+  "events": {
+    "KEY_UP": [
+      {
+        "direction": "UP", 
+        "type": "MOVE", 
+        "target": "PLAYER_TANK"
+      }
+    ], 
+    "KEY_SPACE": [
+      {
+        "type": "SHOOT", 
+        "target": "PLAYER_TANK"
+      }
+    ], 
+    "TARGET_SCORE_1000": [
+      {
+        "params": [
+          [
+            10, 
+            2
+          ]
+        ], 
+        "type": "SPAWN", 
+        "target": "MEGA_FORTRESS"
+      }
+    ], 
+    "KEY_RIGHT": [
+      {
+        "direction": "RIGHT", 
+        "type": "MOVE", 
+        "target": "PLAYER_TANK"
+      }
+    ], 
+    "START": [
+      {
+        "params": [
+          [
+            10, 
+            18
+          ]
+        ], 
+        "type": "SPAWN", 
+        "target": "PLAYER_TANK"
+      }
+    ], 
+    "KEY_LEFT": [
+      {
+        "direction": "LEFT", 
+        "type": "MOVE", 
+        "target": "PLAYER_TANK"
+      }
+    ], 
+    "TICK": [
+      {
+        "direction": "FORWARD", 
+        "type": "MOVE", 
+        "target": "BULLET"
+      }
+    ], 
+    "KEY_DOWN": [
+      {
+        "direction": "DOWN", 
+        "type": "MOVE", 
+        "target": "PLAYER_TANK"
+      }
+    ]
+  }
+}

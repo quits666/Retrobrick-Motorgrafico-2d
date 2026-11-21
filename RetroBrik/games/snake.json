@@ -1,0 +1,105 @@
+{
+  "speed_increment": 10, 
+  "levels": {}, 
+  "grid": [
+    18, 
+    18
+  ], 
+  "invulnerability_time": 0, 
+  "initial_speed": 300, 
+  "shapes": {
+    "PIXEL": {
+      "color": "#00FFFF", 
+      "speed": 1, 
+      "hp": 1, 
+      "states": [
+        [
+          [
+            1
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "DEFAULT"
+    }
+  }, 
+  "game_type": "SNAKE", 
+  "shape_type": "RECTANGLE", 
+  "has_poison": false, 
+  "difficulty_mode": "BABY", 
+  "has_obstacles": false, 
+  "events": {
+    "COLLISION_SELF": [
+      {
+        "type": "GAME_OVER"
+      }
+    ], 
+    "KEY_UP": [
+      {
+        "direction": "UP", 
+        "type": "CHANGE_DIRECTION"
+      }
+    ], 
+    "KEY_RIGHT": [
+      {
+        "direction": "RIGHT", 
+        "type": "CHANGE_DIRECTION"
+      }
+    ], 
+    "START": [
+      {
+        "params": [
+          [
+            9, 
+            9
+          ]
+        ], 
+        "type": "SPAWN", 
+        "target": "PLAYER"
+      }, 
+      {
+        "type": "SPAWN", 
+        "target": "FOOD"
+      }
+    ], 
+    "KEY_LEFT": [
+      {
+        "direction": "LEFT", 
+        "type": "CHANGE_DIRECTION"
+      }
+    ], 
+    "EAT_FOOD": [
+      {
+        "type": "INCREASE_SCORE", 
+        "value": 10
+      }, 
+      {
+        "type": "GROW", 
+        "target": "PLAYER"
+      }, 
+      {
+        "type": "SPAWN", 
+        "target": "FOOD"
+      }
+    ], 
+    "COLLISION_WALL": [
+      {
+        "type": "GAME_OVER"
+      }
+    ], 
+    "TICK": [
+      {
+        "direction": "FORWARD", 
+        "type": "MOVE", 
+        "target": "PLAYER"
+      }
+    ], 
+    "KEY_DOWN": [
+      {
+        "direction": "DOWN", 
+        "type": "CHANGE_DIRECTION"
+      }
+    ]
+  }
+}

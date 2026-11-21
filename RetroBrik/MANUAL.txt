@@ -1,0 +1,67 @@
+=============================================================
+          MANUAL TECNICO DE USUARIO - BRICKSCRIPT
+=============================================================
+
+1. ARQUITECTURA DEL MOTOR BRICKSCRIPT
+-------------------------------------------------------------
+Este ecosistema se compone de dos modulos principales:
+
+* compiler.py (El Parser): 
+  Lee los archivos .brick y los traduce a un Arbol de Sintaxis 
+  Abstracta (AST) en formato JSON. Su naturaleza polimorfica 
+  le permite ignorar etiquetas no utilizadas y asignar valores 
+  por defecto a configuraciones ausentes.
+
+* runtime.py (El Motor): 
+  Lee el archivo JSON generado. Desacopla la logica de 
+  renderizado y las fisicas, cargando los comportamientos 
+  especificos (Snake, Tetris, Tanks) dependiendo del GAME_TYPE 
+  detectado.
+
+
+2. COMO ANADIR UN NUEVO JUEGO AL ECOSISTEMA
+-------------------------------------------------------------
+1. Crea un nuevo archivo de texto con la extension .brick 
+   dentro del directorio /games.
+2. Define obligatoriamente la cabecera con GAME_TYPE (SNAKE, 
+   TETRIS o TANKS) y el GAME_GRID (X, Y).
+3. Define tus formas (DEFINE SHAPE), variables de velocidad y 
+   eventos (ON_TICK, ON_START, ON_KEY...).
+4. Ejecuta el juego utilizando el lanzador jugar.bat seguido 
+   del nombre de tu archivo.
+
+
+3. DICCIONARIO DE ETIQUETAS AVANZADAS
+-------------------------------------------------------------
+El lenguaje ha sido extendido para soportar mecanicas complejas. 
+Aqui tienes como utilizarlas en tus scripts:
+
+* COLOR
+  Uso: COLOR #FF0000
+  Descripcion: Asigna un color en formato hexadecimal a una 
+  pieza o entidad.
+
+* CHANCE
+  Uso: CHANCE 1.5
+  Descripcion: Modifica la probabilidad de aparicion de una 
+  pieza (ideal para la logica de Tetris).
+
+* LEVELS
+  Uso: LEVELS { LEVEL BABY: ... }
+  Descripcion: Define bloques de dificultad escalable con 
+  configuraciones internas exclusivas.
+
+* HP
+  Uso: HP 3
+  Descripcion: Asigna puntos de vida a una entidad (jugador, 
+  enemigo o jefe).
+
+* SPEED
+  Uso: SPEED 4
+  Descripcion: Define cada cuantos "ticks" se mueve una 
+  entidad de forma independiente.
+
+* TYPE
+  Uso: TYPE: ENEMY
+  Descripcion: Categoriza las entidades en Tanks para aplicar 
+  las logicas de colision y comportamiento.

@@ -1,0 +1,283 @@
+{
+  "speed_increment": 10, 
+  "levels": {}, 
+  "grid": [
+    10, 
+    20
+  ], 
+  "invulnerability_time": 0, 
+  "initial_speed": 300, 
+  "shapes": {
+    "T_PIECE": {
+      "color": "#00FFFF", 
+      "speed": 1, 
+      "hp": 1, 
+      "states": [
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            0, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "DEFAULT"
+    }, 
+    "L_PIECE": {
+      "color": "#00FFFF", 
+      "speed": 1, 
+      "hp": 1, 
+      "states": [
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            1
+          ]
+        ], 
+        [
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            1
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            0, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1
+          ], 
+          [
+            1, 
+            0, 
+            0
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "DEFAULT"
+    }, 
+    "I_PIECE": {
+      "color": "#00FFFF", 
+      "speed": 1, 
+      "hp": 1, 
+      "states": [
+        [
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            1, 
+            0, 
+            0
+          ]
+        ], 
+        [
+          [
+            0, 
+            0, 
+            0, 
+            0
+          ], 
+          [
+            1, 
+            1, 
+            1, 
+            1
+          ], 
+          [
+            0, 
+            0, 
+            0, 
+            0
+          ], 
+          [
+            0, 
+            0, 
+            0, 
+            0
+          ]
+        ]
+      ], 
+      "chance": 1.0, 
+      "heals": 0, 
+      "type": "DEFAULT"
+    }
+  }, 
+  "game_type": "TETRIS", 
+  "shape_type": "RECTANGLE", 
+  "has_poison": false, 
+  "difficulty_mode": "BABY", 
+  "has_obstacles": false, 
+  "events": {
+    "KEY_UP": [
+      {
+        "type": "ROTATE", 
+        "target": "CURRENT_PIECE"
+      }
+    ], 
+    "KEY_RIGHT": [
+      {
+        "direction": "RIGHT", 
+        "type": "MOVE", 
+        "target": "CURRENT_PIECE"
+      }
+    ], 
+    "START": [
+      {
+        "type": "SPAWN", 
+        "target": "RANDOM_SHAPE"
+      }
+    ], 
+    "KEY_LEFT": [
+      {
+        "direction": "LEFT", 
+        "type": "MOVE", 
+        "target": "CURRENT_PIECE"
+      }
+    ], 
+    "LINE_CLEAR": [
+      {
+        "type": "INCREASE_SCORE", 
+        "value": 100
+      }
+    ], 
+    "TICK": [
+      {
+        "direction": "DOWN", 
+        "type": "MOVE", 
+        "target": "CURRENT_PIECE"
+      }
+    ], 
+    "KEY_DOWN": [
+      {
+        "direction": "DOWN", 
+        "type": "MOVE", 
+        "target": "CURRENT_PIECE"
+      }
+    ]
+  }
+}

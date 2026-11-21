@@ -1,0 +1,64 @@
+<programa> ::= <tipo_juego> <grid> <config_velocidad> <definicion_forma> <config_niveles_dificultad> <definiciones> <eventos>
+
+<tipo_juego> ::= "GAME_TYPE" "SNAKE"
+<grid>        ::= "GAME_GRID" "(" <numero> "," <numero> ")"
+
+;; Configuración opcional de velocidad
+<config_velocidad> ::= <velocidad_inicial> <incremento_velocidad> | ""
+<velocidad_inicial>   ::= "INITIAL_SPEED" <numero>
+<incremento_velocidad>::= "SPEED_INCREMENT" <numero>
+
+;; Personalización geométrica
+<definicion_forma> ::= "DEFINE" "SHAPE" <tipo_forma> | ""
+<tipo_forma>       ::= "RECTANGLE" | "CIRCULAR" | "TRIANGULAR"
+
+;; Configuración de Niveles de Dificultad
+<config_niveles_dificultad> ::= "LEVELS" "{" <lista_dificultades> "}" | ""
+<lista_dificultades>        ::= <config_dificultad> | <config_dificultad> <lista_dificultades>
+<config_dificultad>         ::= "LEVEL" <modo_dificultad> ":" <propiedades_dificultad>
+<modo_dificultad>           ::= "BABY" | "ENTUSIASTA" | "NYAN_CAT"
+
+<propiedades_dificultad>    ::= <propiedad_dif> | <propiedad_dif> <propiedades_dificultad>
+<propiedad_dif>            ::= "INVULNERABILITY_TIME" <numero> "SECONDS"
+                             | "HAS_POISON_FRUIT" <booleano>
+                             | "HAS_OBSTACLES" <booleano>
+                             | "SPEED" <numero>
+
+<booleano> ::= "TRUE" | "FALSE"
+
+;; Definición de Niveles de Mapa
+<definiciones> ::= <definicion_nivel> | <definicion_nivel> <definiciones> | ""
+<definicion_nivel> ::= "DEFINE" "LEVEL" <numero> <meta_score> <mapa_obstaculos> "END"
+<meta_score>       ::= "SCORE_GOAL" <numero>
+<mapa_obstaculos>  ::= "MAP" ":" <filas_mapa>
+<filas_mapa>       ::= <fila_mapa> | <fila_mapa> <filas_mapa>
+<fila_mapa>        ::= "[" <simbolos_mapa> "]"
+<simbolos_mapa>    ::= <simbolo_celda> | <simbolo_celda> <simbolos_mapa>
+<simbolo_celda>    ::= "." | "#"
+
+;; Eventos y Acciones
+<eventos>  ::= <evento> | <evento> <eventos>
+<evento>   ::= "ON" <nombre_evento_snake> ":" <acciones_snake> "END"
+
+<nombre_evento_snake> ::= "START" | "TICK" | "EAT_FOOD" | "EAT_POISON" | "HIT_CLOUD" | "ACTIVATE_POWERUP" | "LEVEL_UP" 
+                        | "KEY_UP" | "KEY_DOWN" | "KEY_LEFT" | "KEY_RIGHT"
+
+<acciones_snake> ::= <accion_snake> | <accion_snake> <acciones_snake>
+<accion_snake>  ::= "SPAWN" <objeto_spawn>
+                  | "SPAWN" <objeto_spawn> "AT" <posicion_spawn>
+                  | "MOVE" "SNAKE" "FORWARD"
+                  | "GROW" "SNAKE"
+                  | "INCREASE_SCORE" <numero>
+                  | "DECREASE_SCORE" <numero>
+                  | "INCREASE_SPEED"
+                  | "NEXT_LEVEL"
+                  | "RESET_SNAKE"
+                  | "CHANGE_DIRECTION" <direccion>
+                  | "START_INVULNERABILITY" <numero>
+
+<objeto_spawn>   ::= "FOOD" | "POISON_FRUIT" | "CLOUD" | "POWERUP" | "PLAYER"
+<posicion_spawn> ::= "(" <numero> "," <numero> ")" | "RANDOM"
+
+<direccion>     ::= "UP" | "DOWN" | "LEFT" | "RIGHT"
+<numero>        ::= <digito> | <digito> <numero>
+<digito>        ::= "0"..."9"

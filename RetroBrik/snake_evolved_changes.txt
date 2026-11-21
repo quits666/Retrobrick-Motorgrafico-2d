@@ -1,0 +1,58 @@
+===============================================================================
+INFORME TÉCNICO DE CAMBIOS - SNAKE EVOLVED
+Archivo de referencia: snake_evolved.brick / runtime.py / compiler.py
+Desarrollador: Simón Urrego Montoya
+===============================================================================
+
+1. DESCRIPCIÓN GENERAL
+-------------------------------------------------------------------------------
+El presente documento detalla las modificaciones técnicas e innovaciones 
+implementadas en el motor de juego (runtime.py), el compilador (compiler.py)
+y las definiciones de reglas para "Snake Evolved". Se documenta la lógica de
+colisión con nubes/obstáculos, la gestión del tiempo para el estado de
+invulnerabilidad (Power-Up) y los modos visuales por nivel.
+
+
+2. AUTORÍA Y DESARROLLO INDIVIDUAL
+-------------------------------------------------------------------------------
+- Desarrollo Individual (Simón Urrego Montoya):
+  * Diseño y estructuración del archivo de definición 'games/snake_evolved.brick'.
+  * Implementación de la carga dinámica de mapas por niveles y extracción de 
+    obstáculos/nubes en 'runtime.py'.
+  * Desarrollo del algoritmo de prevención de solapamiento `es_casilla_valida_para_spawn`
+    para asegurar la correcta reaparición de items.
+  * Programación del temporizador por dt para la invulnerabilidad (Power-Up)
+    y gestión del encogimiento/reducción de tamaño por veneno.
+  * Implementación del modo visual Nyan Cat (fondo azul estelar, rostro completo 
+    con orejitas, ojos, cachetes y boca) exclusivo para el Nivel 3.
+
+
+3. IMPLEMENTACIÓN TÉCNICA DE CAMBIOS
+-------------------------------------------------------------------------------
+
+A. LOGICA DE COLISIÓN CON NUBES Y OBSTÁCULOS (#)
+   - Carga Dinámica de Mapas: Al cambiar de nivel (`cargar_mapa_nivel`), el sistema
+     procesa la matriz del mapa (`levels[id].map`) y almacena las coordenadas 
+     `[x, y]` de cada obstáculo o nube ('#') en la lista `self.obstaculos`.
+   - Verificación de Colisión: Durante el movimiento (`snake_mover_jugador`), se 
+     evalúa si la nueva posición coincide con algún muro u obstáculo registrado.
+   - Manejo de Invulnerabilidad: Si la colisión ocurre mientras `self.invulnerable` 
+     es True, la colisión con paredes y nubes se ignora. En caso contrario, se 
+     dispara el evento 'ON_COLLISION_WALL' finalizando la partida.
+   - Spawn Seguro de Entidades: Se integró el método `es_casilla_valida_para_spawn`
+     para garantizar que al pasar de nivel o comer items, la comida, el veneno 
+     y los power-ups NUNCA reaparezcan dentro de las coordenadas de `self.obstaculos`.
+
+B. MANEJO Y GESTIÓN DEL TIEMPO PARA EL POWER-UP (INVULNERABILIDAD)
+   - Activación: Al consumir la entidad POWERUP (círculo cyan), se extrae la duración
+     de la configuración (`self.datos_juego.get('invulnerability_time', 5)`).
+   - Temporización en Tick: Se activa `self.invulnerable = True` y se asigna 
+     `self.timer_invulnerable = float(duracion)`. En cada ciclo del bucle principal,
+     el temporizador se reduce utilizando el delta time (`self.timer_invulnerable -= dt`).
+   - Expiración de Efecto: Al llegar a 0, se restablece `self.invulnerable = False`, 
+     devolviendo a la serpiente a su estado normal de colisiones.
+
+
+===============================================================================
+Fin del informe - Proyecto BrickScript / Snake Evolved
+===============================================================================

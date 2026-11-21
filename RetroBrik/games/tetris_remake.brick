@@ -1,0 +1,160 @@
+# tetris_remake.brick
+GAME_TYPE TETRIS
+
+GAME_GRID (10, 20)
+
+# =======================================================
+# FIGURAS BASE EXTENDIDAS
+# =======================================================
+
+DEFINE SHAPE I_PIECE
+  COLOR #00FFFF
+  CHANCE 2.0
+  STATE 1:
+    [0, 1, 0, 0]
+    [0, 1, 0, 0]
+    [0, 1, 0, 0]
+    [0, 1, 0, 0]
+  STATE 2:
+    [0, 0, 0, 0]
+    [1, 1, 1, 1]
+    [0, 0, 0, 0]
+    [0, 0, 0, 0]
+END
+
+DEFINE SHAPE L_PIECE
+  COLOR #FF9900
+  CHANCE 1.5
+  STATE 1:
+    [0, 1, 0]
+    [0, 1, 0]
+    [0, 1, 1]
+  STATE 2:
+    [0, 0, 0]
+    [1, 1, 1]
+    [1, 0, 0]
+  STATE 3:
+    [1, 1, 0]
+    [0, 1, 0]
+    [0, 1, 0]
+  STATE 4:
+    [0, 0, 1]
+    [1, 1, 1]
+    [0, 0, 0]
+END
+
+DEFINE SHAPE T_PIECE
+  COLOR #AA00FF
+  CHANCE 1.5
+  STATE 1:
+    [0, 1, 0]
+    [1, 1, 1]
+    [0, 0, 0]
+  STATE 2:
+    [0, 1, 0]
+    [0, 1, 1]
+    [0, 1, 0]
+  STATE 3:
+    [0, 0, 0]
+    [1, 1, 1]
+    [0, 1, 0]
+  STATE 4:
+    [0, 1, 0]
+    [1, 1, 0]
+    [0, 1, 0]
+END
+
+# =======================================================
+# NUEVAS FIGURAS (O, S, Z)
+# =======================================================
+
+DEFINE SHAPE O_PIECE
+  COLOR #FFFF00
+  CHANCE 1.0
+  STATE 1:
+    [1, 1]
+    [1, 1]
+END
+
+DEFINE SHAPE S_PIECE
+  COLOR #00FF00
+  CHANCE 1.0
+  STATE 1:
+    [0, 1, 1]
+    [1, 1, 0]
+    [0, 0, 0]
+  STATE 2:
+    [0, 1, 0]
+    [0, 1, 1]
+    [0, 0, 1]
+  STATE 3:
+    [0, 0, 0]
+    [0, 1, 1]
+    [1, 1, 0]
+  STATE 4:
+    [1, 0, 0]
+    [1, 1, 0]
+    [0, 1, 0]
+END
+
+DEFINE SHAPE Z_PIECE
+  COLOR #FF0000
+  CHANCE 1.0
+  STATE 1:
+    [1, 1, 0]
+    [0, 1, 1]
+    [0, 0, 0]
+  STATE 2:
+    [0, 0, 1]
+    [0, 1, 1]
+    [0, 1, 0]
+  STATE 3:
+    [0, 0, 0]
+    [1, 1, 0]
+    [0, 1, 1]
+  STATE 4:
+    [0, 1, 0]
+    [1, 1, 0]
+    [1, 0, 0]
+END
+
+# =======================================================
+# ENTIDAD ESPECIAL: POWER-UP (Pieza de 1x1)
+# =======================================================
+
+DEFINE SHAPE POWERUP
+  COLOR #FFFFFF
+  CHANCE 0.0
+  STATE 1:
+    [1]
+END
+
+# =======================================================
+# EVENTOS Y REGLAS DEL JUEGO
+# =======================================================
+
+ON START:
+  SPAWN RANDOM_SHAPE
+END
+
+ON TICK:
+  MOVE CURRENT_PIECE DOWN
+END
+
+ON LINE_CLEAR:
+  INCREASE_SCORE 100
+END
+
+# Controles
+ON KEY_LEFT:
+  MOVE CURRENT_PIECE LEFT
+END
+ON KEY_RIGHT:
+  MOVE CURRENT_PIECE RIGHT
+END
+ON KEY_DOWN:
+  MOVE CURRENT_PIECE DOWN
+END
+ON KEY_UP:
+  ROTATE CURRENT_PIECE
+END

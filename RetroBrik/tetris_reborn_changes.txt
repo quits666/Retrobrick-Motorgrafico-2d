@@ -1,0 +1,63 @@
+=====================================================================
+DOCUMENTO DE CAMBIOS - TETRIS REBORN (ACTIVIDAD 3)
+=====================================================================
+
+1. AUTORÍA Y DESARROLLO INDIVIDUAL
+---------------------------------------------------------------------
+- Desarrollador [Simón Urrego Montoya]:
+  * Rediseño integral de las matrices de 3x3 y 4x4 en 'tetris_remake.brick'.
+  * Definición y actualización de la gramática extendida en 'tetris_remake.bnf'.
+  * Modificación del Lexer y Parser en 'compiler.py' (procesamiento de COLOR y CHANCE).
+  * Implementación del algoritmo de selección por peso (ruleta) en 'runtime.py'.
+  * Desarrollo de la lógica de activación del Power-Up (3 filas), gestión de 
+    renders dinámicos y validación de retrocompatibilidad.
+  * Redacción de la bitácora de cambios y empaquetado del proyecto.
+
+
+2. CAMBIOS ESPECÍFICOS EN EL CÓDIGO POR ARCHIVO
+---------------------------------------------------------------------
+
+A. En 'games/tetris_remake.brick':
+   - Se rediseñaron las figuras L_PIECE y T_PIECE para usar matrices de 3x3 
+     con 4 estados de rotación completos sobre su centro físico.
+   - Se ajustó I_PIECE a 2 estados de rotación simétricos en matriz 4x4.
+   - Se agregaron las definiciones O_PIECE (2x2), S_PIECE (3x3), Z_PIECE (3x3).
+   - Se agregaron los atributos 'COLOR' (#HEX) y 'CHANCE' (flotante) a cada figura.
+   - Se añadió la figura 'POWERUP' (matriz 1x1, COLOR #FFFFFF, CHANCE 0.0).
+
+B. En 'compiler.py':
+   - En la función 'lexer()': Se actualizó el bucle de lectura de caracteres 
+     para procesar códigos de color hexadecimales (#HEX) y números flotantes 
+     (ej. 2.0) sin fragmentar los tokens ni ignorar el carácter '#'.
+   - En 'parsear_shape()': Se agregaron variables 'color' (def: "#00FFFF") 
+     y 'chance' (def: 1.0) con un bucle while que lee los tokens 'COLOR' 
+     y 'CHANCE' opcionalmente.
+   - En el AST generado: Se guardan 'color' y 'chance' dentro del diccionario 
+     de cada figura para ser exportado al JSON final.
+
+C. En 'runtime.py':
+   - Método 'obtener_pieza_ponderada()' [NUEVO]: Implementa la lógica de 
+     ruleta de selección por pesos acumulativos usando 'random.uniform()' sin 
+     dependencias externas (numpy). Maneja la inyección del POWERUP si la 
+     bandera 'powerup_listo' es True.
+   - Método 'tetris_spawn_pieza()': Se sustituyó 'random.choice()' por la llamada 
+     a 'obtener_pieza_ponderada()' para recibir tanto la matriz como el color.
+   - Método 'tetris_limpiar_lineas()': Se agregó la condición 'if lineas_limpias >= 3:' 
+     para activar 'self.powerup_listo = True' únicamente al lograr un "Triple".
+   - Método 'dibujar()': Se reemplazó el color estático hardcodeado '#00FFFF' 
+     por 'self.color_pieza_actual' para renderizar los colores dinámicos.
+
+D. En 'tetris_remake.bnf':
+   - Se modificó la regla '<definicion_shape>' para incorporar el no-terminal 
+     '<atributos_opcionales>'.
+   - Se añadieron las reglas '<atributo_color>', '<atributo_chance>', 
+     '<numero_decimal>' y '<color_hex>' para formalizar la sintaxis.
+
+
+3. GARANTÍA DE RETROCOMPATIBILIDAD
+---------------------------------------------------------------------
+- Si se compila y ejecuta el archivo original 'tetris.brick', 'compiler.py' y 
+  'runtime.py' asignan por defecto COLOR='#00FFFF' y CHANCE=1.0 a las figuras 
+  que carecen de estos atributos, asegurando que el ejecutable antiguo funcione 
+  exactamente igual sin errores de sintaxis o tiempo de ejecución.
+=====================================================================

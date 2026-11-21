@@ -1,0 +1,24 @@
+<programa> ::= <cabecera> <configuraciones_opcionales> <cuerpo>
+
+<cabecera> ::= "GAME_TYPE" <tipo_juego> 
+               "GAME_GRID" "(" <numero> "," <numero> ")"
+
+<tipo_juego> ::= "SNAKE" | "TETRIS" | "TANKS"
+
+<configuraciones_opcionales> ::= <config_vel>* <config_niveles>*
+
+<config_vel> ::= "INITIAL_SPEED" <numero> | "SPEED_INCREMENT" <numero>
+
+<cuerpo> ::= <definicion>* <evento>*
+
+<definicion> ::= <def_shape> | <def_boss> | <def_levels>
+
+<def_shape> ::= "DEFINE SHAPE" <identificador> <forma_opcional> ":" <propiedades_shape> <estados> "END"
+<forma_opcional> ::= "CIRCULAR" | "TRIANGULAR" | "RECTANGLE" | <vacio>
+
+<propiedades_shape> ::= <prop_color> | <prop_chance> | <prop_hp> | <vacio>
+<prop_color> ::= "COLOR" <hex_code>
+<prop_chance> ::= "CHANCE" <decimal>
+
+<evento> ::= "ON" <nombre_evento> ":" <accion>* "END"
+<accion> ::= <acc_spawn> | <acc_move> | <acc_score> | <acc_grow> | <acc_shoot>

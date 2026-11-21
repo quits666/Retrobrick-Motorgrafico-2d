@@ -1,0 +1,122 @@
+===============================================================================
+                       INFORME TÉCNICO DE PROYECTO
+                     BRICKSCRIPT - TANK GAME ENGINE
+===============================================================================
+
+DATOS DEL PROYECTO:
+-------------------
+Estudiante / Autor: Simón Urrego Montoya
+Motor de Juego: BrickScript (Soporte multi-juego: Tanks, Snake, Tetris)
+Lenguaje base: Python (Runtime Tkinter + Compilador DSL)
+
+===============================================================================
+1. DIFERENCIACIÓN EN CÓDIGO: JUGADOR VS. ENEMIGOS
+===============================================================================
+
+La distinción entre el tanque controlado por el usuario y las unidades enemigas 
+se implementó de manera modular en las tres capas del sistema (Gramática, AST 
+y Entorno de Ejecución):
+
+A. Definición Gramatical (BNF) y DSL (.brick):
+   - En la gramática (tanks.bnf), las entidades se etiquetan explícitamente mediante 
+     la regla <type_tag> ::= "TYPE:" ("PLAYER" | "ENEMY" | ...)[cite: 10].
+   - En el archivo fuente (.brick), el jugador se define con TYPE: PLAYER, mientras 
+     que los enemigos usan TYPE: ENEMY (ej. BASIC_ENEMY, ARMORED_ENEMY)[cite: 11].
+
+B. Procesamiento en Compilador (compiler.py):
+   - El parser extrae la etiqueta 'TYPE' y la almacena en el nodo de la entidad 
+     dentro del diccionario AST (`ast["shapes"][nombre]["type"]`)[cite: 13].
+
+C. Estado y Representación en el Motor (runtime.py):
+   - Jugador: Se gestiona como un objeto único de estado global (`self.player_x`, 
+     `self.player_y`, `self.player_dir`, `self.player_hp`)[cite: 12].
+   - Enemigos: Se gestionan como una estructura de colección dinámica 
+     (`self.enemies = []`), donde cada elemento es un diccionario con posición, 
+     puntos de vida actuales y dirección[cite: 12].
+
+D. Asignación de Controles vs. Inteligencia Artificial:
+   - Eventos de Entrada: Las teclas del teclado (`KEY_UP`, `KEY_LEFT`, etc.) 
+     y la acción de disparo (`KEY_SPACE`) están vinculadas exclusivamente 
+     al objetivo `PLAYER_TANK`[cite: 11, 12].
+   - Ciclo de IA (Tick): En el método `game_loop()`, se itera sobre la lista 
+     `self.enemies` para calcular persecución por ejes y disparos aleatorios o por 
+     detección de línea de visión hacia el jugador[cite: 12].
+
+E. Propiedad del Proyectil (Owner Tracking):
+   - Cada bala creada en el sistema registra a su emisor: `owner: "PLAYER"` o 
+     `owner: "ENEMY"`[cite: 12].
+   - La resolución de colisiones valida que las balas del jugador solo dañen 
+     muros, enemigos y al Boss, mientras que las balas enemigas únicamente dañan 
+     al jugador[cite: 12].
+
+===============================================================================
+2. IMPLEMENTACIÓN DE LA LÓGICA DE VIDA Y FÍSICAS DEL FINAL BOSS
+===============================================================================
+
+El Jefe Final (`MEGA_FORTRESS`) se diseñó como una entidad especial de alto 
+impacto que modifica la dinámica estándar del juego:
+
+A. Estructura y Parámetros en DSL/AST:
+   - Se declara en la gramática con la palabra clave `DEFINE BOSS`[cite: 10, 11].
+   - Posee un valor de salud elevado (`HP 15`) cargado dinámicamente desde el AST 
+     a la variable de ejecución `self.boss_hp`[cite: 11, 12, 13].
+
+B. Ocupación Espacial y Colisión (Matriz 3x3):
+   - A diferencia de los tanques comunes de 1x1, el Boss ocupa una superficie 
+     sólida de 3x3 casillas[cite: 11, 12].
+   - La función `is_occupied_cell(x, y)` evalúa el rango (`bx <= x < bx + 3` e 
+     `by <= y < by + 3`) para impedir que el jugador o el entorno atraviesen 
+     físicamente el cuerpo del Boss[cite: 12].
+
+C. Procesamiento de Recibo de Daño:
+   - Cuando una bala jugadora (`owner == "PLAYER"`) entra en cualquiera de las 
+     9 casillas de la matriz del Boss, la bala se destruye de inmediato y se 
+     reduce la salud: `self.boss_hp -= 1`[cite: 12].
+   - El estado de vida del Boss se renderiza en tiempo real en la interfaz lateral 
+     de Tkinter mientras permanezca con vida[cite: 12].
+
+D. Mecánicas de Ataque y Contacto:
+   - Disparo en Abanico (Escopeta): Cada ciclo de decisión, el Boss lanza 3 
+     balas simultáneas desde su centro (dirección recta, diagonal izquierda 
+     y diagonal derecha) para limitar la zona segura del jugador[cite: 12].
+   - Daño por Aplastamiento: Si el Boss al desplazar horizontalmente su cuerpo 
+     colisiona con las coordenadas del jugador, inflige daño directo a `self.player_hp`[cite: 12].
+
+E. Transición de Spawn y Condición de Victoria:
+   - El evento `ON TARGET_SCORE` invoca la aparición del Boss al alcanzar la 
+     puntuación umbral establecida[cite: 10, 11, 12].
+   - Al llegar a `self.boss_hp <= 0`, se detiene el renderizado del jefe, se 
+     suman 1000 puntos de bonificación y se activa la pantalla de `VICTORIA!`[cite: 12].
+
+===============================================================================
+3. DESGLOSE DE APORTES INDIVIDUALES
+===============================================================================
+
+Integrante: Simón Urrego Montoya
+Rol: Desarrollador Backend & Integrador del Runtime de Ejecución
+
+Aportes Específicos Realizados:
+--------------------------------
+1. Diseño de Arquitectura del Motor (runtime.py):
+   - Implementación completa de la lógica de procesamiento de eventos AST y ciclo 
+     de bucle principal (`game_loop`) basado en Tkinter[cite: 12, 13].
+
+2. Sistema Físico y Manejo de Proyectiles:
+   - Solución al bug de generación de balas a quemarropa frente a muros, 
+     garantizando el registro desde la casilla origen del tanque sin atravesar 
+     muros adyacentes.
+   - Desarrollo del sistema de filtrado de colisiones por propiedad de bala (`owner`).
+
+3. Lógica e Inteligencia del Jefe Final (Boss Mechanics):
+   - Programación de la colisión física multicasilla (matriz 3x3) para la entidad Boss[cite: 12].
+   - Implementación del patrón de ataque especial en abanico (escopeta de 3 proyectiles)[cite: 12].
+   - Integración del sistema de vida (HP), recepción de impactos y condición de 
+     victoria al derrotar la fortaleza[cite: 12].
+
+4. Optimización de Respuesta de IA Enemiga:
+   - Ajuste de los tiempos de reacción y frecuencia de disparo de tanques enemigos 
+     al cruzar la línea de visión del jugador en el plano horizontal/vertical[cite: 12].
+
+5. Pruebas e Integración de Scripts de Consola:
+   - Verificación de retrocompatibilidad con los modos SNAKE y TETRIS[cite: 12].
+   - Creación del entorno ejecutable automatizado (`jugar.bat`).

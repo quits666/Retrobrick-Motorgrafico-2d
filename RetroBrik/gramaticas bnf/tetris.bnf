@@ -1,0 +1,62 @@
+<programa> ::= <cabecera> <configuraciones_opcionales> <cuerpo>
+
+;; --- CABECERA Y CONFIGURACION GENERAL ---
+<cabecera> ::= "GAME_TYPE" ( "SNAKE" | "TETRIS" | "TANKS" ) "GAME_GRID" "(" <numero> "," <numero> ")"
+
+<configuraciones_opcionales> ::= <config_velocidad>? <config_dificultad>?
+
+<config_velocidad> ::= "INITIAL_SPEED" <numero> | "SPEED_INCREMENT" <numero>
+<config_dificultad> ::= "LEVELS" "{" <lista_dificultades> "}"
+<lista_dificultades> ::= "LEVEL" ( "BABY" | "ENTUSIASTA" | "NYAN_CAT" ) ":" <propiedades_dificultad>
+<propiedades_dificultad> ::= "INVULNERABILITY_TIME" <numero> "SECONDS" | "HAS_POISON_FRUIT" <booleano> | "HAS_OBSTACLES" <booleano> | "SPEED" <numero>
+<booleano> ::= "TRUE" | "FALSE"
+
+;; --- CUERPO DEL JUEGO ---
+<cuerpo> ::= <definiciones> <eventos>
+
+;; --- DEFINICIONES (Formas, Jefes y Niveles) ---
+<definiciones> ::= ( <def_shape> | <def_boss> | <def_nivel> )*
+
+<def_shape> ::= "DEFINE SHAPE" <identificador> ( "RECTANGLE" | "CIRCULAR" | "TRIANGULAR" )? ":" <propiedades_entidad> <estados> "END"
+<def_boss> ::= "DEFINE BOSS" <identificador> <propiedades_entidad> <estados> "END"
+
+<propiedades_entidad> ::= ( <prop_color> | <prop_chance> | <prop_tipo> | <prop_hp> | <prop_vel> | <prop_cura> )*
+<prop_color>  ::= "COLOR" <color_hex>
+<prop_chance> ::= "CHANCE" <decimal>
+<prop_tipo>   ::= "TYPE:" ( "PLAYER" | "ENEMY" | "BULLET" | "POWERUP" )
+<prop_hp>     ::= "HP" <numero>
+<prop_vel>    ::= "SPEED" <numero>
+<prop_cura>   ::= "HEALS" <numero>
+
+<def_nivel> ::= "DEFINE LEVEL" <numero> "SCORE_GOAL" <numero> "MAP" ":" <filas_mapa> "END"
+<filas_mapa> ::= ( "[" <simbolos_mapa> "]" )+
+<simbolos_mapa> ::= ( "." | "#" )+
+
+;; --- MATRICES DE ESTADO ---
+<estados> ::= ( "STATE" <numero> ( "[" )? ":" <matriz> ( "]" )? )+
+<matriz> ::= ( "[" <valores_fila> "]" )+
+<valores_fila> ::= <numero> ( "," <numero> )*
+
+;; --- EVENTOS Y ACCIONES ---
+<eventos> ::= ( "ON" <nombre_evento> ":" <acciones> "END" )*
+<nombre_evento> ::= "START" | "TICK" | "LINE_CLEAR" | "EAT_FOOD" | "EAT_POISON" | "COLLISION_WALL" | "COLLISION_SELF" | "TARGET_SCORE" <numero> | "KEY_" <tecla> | <identificador>
+<tecla> ::= "UP" | "DOWN" | "LEFT" | "RIGHT" | "SPACE"
+
+<acciones> ::= ( <accion_movimiento> | <accion_juego> | <accion_entidad> )+
+
+<accion_movimiento> ::= "MOVE" <objetivo> <direccion> | "CHANGE_DIRECTION" <direccion> | "SET_DIRECTION" <direccion> | "ROTATE" <objetivo>
+<accion_juego> ::= "INCREASE_SCORE" <numero> | "DECREASE_SCORE" <numero> | "INCREASE_SPEED" | "NEXT_LEVEL" | "GAME_OVER"
+<accion_entidad> ::= "SPAWN" <objetivo> ( "AT" <posicion> )? | "GROW" <objetivo> <numero>? | "SHOOT" <objetivo> | "RESET_SNAKE" | "START_INVULNERABILITY" <numero>
+
+<objetivo> ::= "PLAYER" | "CURRENT_PIECE" | "FOOD" | "POISON_FRUIT" | "CLOUD" | "POWERUP" | "PLAYER_TANK" | "ENEMY" | "BULLET" | "BOSS" | "RANDOM_SHAPE" | <identificador>
+<direccion> ::= "UP" | "DOWN" | "LEFT" | "RIGHT" | "FORWARD"
+<posicion> ::= "(" <numero> "," <numero> ")" | "RANDOM"
+
+;; --- PRIMITIVAS LEXICAS ---
+<identificador> ::= <letra> ( <letra> | <digito> | "_" )*
+<color_hex> ::= "#" ( <hex_char> ){6}
+<decimal> ::= <numero> "." <numero> | <numero>
+<numero> ::= <digito>+
+<letra> ::= "A"..."Z" | "a"..."z"
+<digito> ::= "0"..."9"
+<hex_char> ::= "0"..."9" | "A"..."F" | "a"..."f"

@@ -1,0 +1,146 @@
+GAME_TYPE SNAKE
+GAME_GRID (20, 20)
+
+INITIAL_SPEED 300
+SPEED_INCREMENT 5
+
+# Personalización Geométrica (CIRCULAR, TRIANGULAR o RECTANGLE)
+DEFINE SHAPE CIRCULAR
+
+# Bloque de Niveles de Dificultad
+LEVELS {
+  LEVEL BABY:
+    HAS_POISON_FRUIT FALSE
+    HAS_OBSTACLES FALSE
+    SPEED 300
+
+  LEVEL ENTUSIASTA:
+    HAS_POISON_FRUIT TRUE
+    INVULNERABILITY_TIME 6 SECONDS
+    SPEED 250
+
+  LEVEL NYAN_CAT:
+    HAS_OBSTACLES TRUE
+    SPEED 200
+}
+
+# Configuración de Mapa/Progreso
+DEFINE LEVEL 1
+  SCORE_GOAL 30
+  MAP:
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+END
+
+DEFINE LEVEL 2
+  SCORE_GOAL 80
+  MAP:
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . # # # # . . # # # # . . . . . .]
+    [. . . . # . . # . . # . . # . . . . . .]
+    [. . . . # . . # . . # . . # . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . # . . # . . # . . # . . . . . .]
+    [. . . . # . . # . . # . . # . . . . . .]
+    [. . . . # # # # . . # # # # . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+END
+DEFINE LEVEL 3
+  SCORE_GOAL 9999
+  MAP:
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+    [. . . . . . . . . . . . . . . . . . . .]
+END
+
+# Eventos y Reglas
+ON START:
+  SPAWN PLAYER AT (10, 10)
+  SPAWN FOOD
+  SPAWN POISON_FRUIT
+  SPAWN POWERUP
+END
+
+ON TICK:
+  MOVE SNAKE FORWARD
+END
+
+ON EAT_FOOD:
+  GROW SNAKE
+  INCREASE_SCORE 10
+  INCREASE_SPEED
+  SPAWN FOOD
+END
+
+ON EAT_POISON:
+  SPAWN POISON_FRUIT
+END
+
+ON ACTIVATE_POWERUP:
+  SPAWN POWERUP
+END
+
+ON LEVEL_UP:
+  NEXT_LEVEL
+  RESET_SNAKE
+END
+
+# Controles
+ON KEY_LEFT:
+  CHANGE_DIRECTION LEFT
+END
+ON KEY_RIGHT:
+  CHANGE_DIRECTION RIGHT
+END
+ON KEY_UP:
+  CHANGE_DIRECTION UP
+END
+ON KEY_DOWN:
+  CHANGE_DIRECTION DOWN
+END

@@ -1,0 +1,53 @@
+<game_definition> ::= <game_type> <grid_def> <shapes_def> <boss_def>? <events_def>
+
+<game_type> ::= "GAME_TYPE TANKS"
+
+/* CORRECCIÓN: Uso de paréntesis para la cuadrícula */
+<grid_def> ::= "GAME_GRID" "(" <number> "," <number> ")"
+
+<shapes_def> ::= <shape_decl>+
+
+<shape_decl> ::= "DEFINE SHAPE" <identifier> <shape_attributes> <shape_body>
+
+<shape_attributes> ::= <type_tag> <color_tag>? <hp_tag>? <speed_tag>? <heal_tag>?
+
+/* Identificación obligatoria de jugador y enemigos */
+<type_tag> ::= "TYPE:" ( "PLAYER" | "ENEMY" | "BULLET" | "POWERUP" )
+
+<color_tag> ::= "COLOR" <hex_color>
+<hp_tag> ::= "HP" <number>
+<speed_tag> ::= "SPEED" <number>
+<heal_tag> ::= "HEALS" <number>
+
+<shape_body> ::= <state_def>+
+<state_def> ::= "STATE" <number> "[" <matrix_rows> "]"
+<matrix_rows> ::= <row> ("," <row>)*
+<row> ::= "[" <number_list> "]"
+<number_list> ::= <number> ("," <number>)*
+
+/* Definición del Jefe Final */
+<boss_def> ::= "DEFINE BOSS" <identifier> <boss_attributes> <shape_body>
+<boss_attributes> ::= <color_tag> <hp_tag>
+
+<events_def> ::= "EVENTS {" <event_list> "}"
+<event_list> ::= <event_decl>+
+<event_decl> ::= <trigger> ":" <action_list>
+
+<trigger> ::= "ON_KEY_" <key> 
+            | "ON_TICK" 
+            | "ON_START"
+            | "ON_COLLISION"
+            /* CORRECCIÓN: Espacio en ON TARGET_SCORE según el documento */
+            | "ON TARGET_SCORE" <number>
+
+<action_list> ::= <action>+
+<action> ::= <move_action> | <spawn_action> | <shoot_action> | <increase_score>
+
+<move_action> ::= "MOVE" <target> ( "UP" | "DOWN" | "LEFT" | "RIGHT" | "FORWARD" )
+<spawn_action> ::= "SPAWN" <target> ( "AT" "(" <number> "," <number> ")" )?
+<shoot_action> ::= "SHOOT" <target>
+<increase_score> ::= "INCREASE_SCORE" <number>
+
+<target> ::= <identifier> | "PLAYER_TANK" | "ENEMY" | "BULLET" | "BOSS" | "POWERUP"
+<hex_color> ::= "#" <alphanumeric>{6}
+<key> ::= "UP" | "DOWN" | "LEFT" | "RIGHT" | "SPACE"
