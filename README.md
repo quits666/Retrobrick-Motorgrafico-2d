@@ -23,4 +23,4 @@ jugar.bat snake_evolved
 jugar.bat tetris_remake
 jugar.bat tanks
 
-Nota: Presiona la tecla q en cualquier momento para salir del juego.
+> **Nota:** Presiona la tecla **q** en cualquier momento para salir del juego.
